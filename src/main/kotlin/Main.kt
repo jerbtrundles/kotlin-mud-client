@@ -21,19 +21,31 @@ fun App() {
     val outputText = remember { mutableStateOf("") }
     val outputScrollState = rememberScrollState()
 
-    val debugScrollState = rememberScrollState()
+    val npcsText = remember { mutableStateOf("") }
+    val monstersText = remember { mutableStateOf("") }
+    val itemsText = remember { mutableStateOf("") }
     val debugText = remember { mutableStateOf("") }
 
-    val webSocketClient = remember { WebSocketClient(outputText, debugLengthText) }
+    val webSocketClient = remember {
+        WebSocketClient(
+            outputText,
+            debugLengthText,
+            roomText,
+            npcsText,
+            monstersText,
+            itemsText,
+            debugText
+        )
+    }
 
     MaterialTheme {
         Row(modifier = Modifier.background(Color.Black)) {
-            LeftColumn(this)
+            LeftColumn(this, itemsText, debugText)
             MiddleColumn(this, webSocketClient, inputText, outputText, roomText, outputScrollState)
-            RightColumn(this, debugText, debugScrollState)
+            RightColumn(this, npcsText, monstersText)
         }
 
-        ScrollToBottom(outputScrollState, debugScrollState)
+        ScrollToBottom(outputScrollState)
         ManageWebSocketClient(webSocketClient)
     }
 }
@@ -61,7 +73,7 @@ fun ManageWebSocketClient(webSocketClient: WebSocketClient) {
 }
 
 @Composable
-fun ScrollToBottom(outputScrollState: ScrollState, debugScrollState: ScrollState) {
+fun ScrollToBottom(outputScrollState: ScrollState) { // , debugScrollState: ScrollState) {
     LaunchedEffect(key1 = Unit) {
         while (true) {
             delay(100)
@@ -71,18 +83,24 @@ fun ScrollToBottom(outputScrollState: ScrollState, debugScrollState: ScrollState
                 )
             }
 
-            if (debugScrollState.canScrollForward) {
-                debugScrollState.animateScrollTo(
-                    debugScrollState.maxValue
-                )
-            }
+//            if (debugScrollState.canScrollForward) {
+//                debugScrollState.animateScrollTo(
+//                    debugScrollState.maxValue
+//                )
+//            }
         }
     }
 }
 
-fun sendAndClearInput(webSocketClient: WebSocketClient, inputText: MutableState<String>) {
+fun sendAndClearInput(
+    webSocketClient: WebSocketClient,
+    inputText: MutableState<String>,
+    outputText: MutableState<String>
+) {
     if (inputText.value.isNotEmpty()) {
         webSocketClient.sendMessage(inputText.value)
+
+        outputText.value += "${inputText.value}\n\n"
         inputText.value = ""
     }
 }

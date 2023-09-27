@@ -21,6 +21,6 @@ fun MiddleColumn(
         ) {
             RoomText(this, roomText)
             OutputText(this, outputText, scrollState)
-            InputRow(this, webSocketClient, inputText)
+            InputRow(this, webSocketClient, inputText, outputText)
         }
     }

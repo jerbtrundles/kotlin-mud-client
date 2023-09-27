@@ -22,9 +22,9 @@ fun RoomText(columnScope: ColumnScope, roomText: MutableState<String>) =
             Text(
                 text = roomText.value,
                 modifier = Modifier
-                    .padding(2.dp)
+                    .padding(8.dp)
                     .fillMaxWidth(),
-                color = Color.Red
+                color = Color.White
             )
         }
     }

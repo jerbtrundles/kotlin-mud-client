@@ -3,7 +3,12 @@ import okhttp3.*
 
 class WebSocketClient(
     val outputText: MutableState<String>,
-    val debugLengthText: MutableState<String>
+    val debugLengthText: MutableState<String>,
+    val roomText: MutableState<String>,
+    val npcsText: MutableState<String>,
+    val monstersText: MutableState<String>,
+    val itemsText: MutableState<String>,
+    val debugText: MutableState<String>
 ) {
     private var webSocket: WebSocket? = null
     private val client = OkHttpClient()
@@ -17,13 +22,24 @@ class WebSocketClient(
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
-                outputText.value += text + "\n\n"
-                while (outputText.value.length > 2000) {
-                    outputText.value =
-                        outputText.value.substring(outputText.value.indexOf("\n") + 1)
+                when {
+                    text.startsWith("MONSTERS:") -> monstersText.value = text.substringAfter(":")
+                    text.startsWith("NPCS:") -> npcsText.value = text.substringAfter(":")
+                    text.startsWith("ROOM:") -> roomText.value = text.substringAfter(":")
+                    text.startsWith("ITEMS:") -> itemsText.value = text.substringAfter(":")
+                    text.startsWith("DEBUG:") -> debugText.value = text.substringAfter(":")
+                    else -> appendAndTrimOutputText(text)
                 }
+            }
 
-                debugLengthText.value = outputText.value.length.toString()
+            private fun appendAndTrimOutputText(text: String) {
+                    outputText.value += text + "\n\n"
+                    while (outputText.value.length > 2000) {
+                        outputText.value =
+                            outputText.value.substring(outputText.value.indexOf("\n") + 1)
+                    }
+
+                    debugLengthText.value = outputText.value.length.toString()
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {

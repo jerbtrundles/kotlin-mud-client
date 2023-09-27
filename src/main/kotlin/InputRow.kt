@@ -19,7 +19,12 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun InputRow(columnScope: ColumnScope, webSocketClient: WebSocketClient, inputText: MutableState<String>) =
+fun InputRow(
+    columnScope: ColumnScope,
+    webSocketClient: WebSocketClient,
+    inputText: MutableState<String>,
+    outputText: MutableState<String>
+) =
     with(columnScope) {
         Box(
             modifier = Modifier
@@ -40,7 +45,7 @@ fun InputRow(columnScope: ColumnScope, webSocketClient: WebSocketClient, inputTe
                         .onKeyEvent {
                             when (it.key) {
                                 Key.Enter -> {
-                                    sendAndClearInput(webSocketClient, inputText)
+                                    sendAndClearInput(webSocketClient, inputText, outputText)
                                     true
                                 }
 
@@ -54,7 +59,7 @@ fun InputRow(columnScope: ColumnScope, webSocketClient: WebSocketClient, inputTe
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Button(
-                    onClick = { sendAndClearInput(webSocketClient, inputText) },
+                    onClick = { sendAndClearInput(webSocketClient, inputText, outputText) },
                     modifier = Modifier.weight(0.2f).align(Alignment.CenterVertically)
                 ) {
                     Icon(

@@ -24,6 +24,7 @@ fun App() {
     val npcsText = remember { mutableStateOf("") }
     val monstersText = remember { mutableStateOf("") }
     val itemsText = remember { mutableStateOf("") }
+    val statsText = remember { mutableStateOf("") }
     val debugText = remember { mutableStateOf("") }
 
     val webSocketClient = remember {
@@ -34,6 +35,7 @@ fun App() {
             npcsText,
             monstersText,
             itemsText,
+            statsText,
             debugText
         )
     }
@@ -42,7 +44,7 @@ fun App() {
         Row(modifier = Modifier.background(Color.Black)) {
             LeftColumn(this, itemsText, debugText)
             MiddleColumn(this, webSocketClient, inputText, outputText, roomText, outputScrollState)
-            RightColumn(this, npcsText, monstersText)
+            RightColumn(this, npcsText, monstersText, statsText)
         }
 
         ScrollToBottom(outputScrollState)
@@ -100,7 +102,7 @@ fun sendAndClearInput(
     if (inputText.value.isNotEmpty()) {
         webSocketClient.sendMessage(inputText.value)
 
-        outputText.value += "${inputText.value}\n\n"
+        outputText.value += "> ${inputText.value}\n\n"
         inputText.value = ""
     }
 }

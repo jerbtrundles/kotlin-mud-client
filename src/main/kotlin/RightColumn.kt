@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 
 // Right column with border
 @Composable
-fun RightColumn(rowScope: RowScope, npcText: MutableState<String>, monstersText: MutableState<String>) {
+fun RightColumn(rowScope: RowScope, npcText: MutableState<String>, monstersText: MutableState<String>, statsText: MutableState<String>) {
     with(rowScope) {
         Column(
             modifier = Modifier
@@ -33,6 +33,14 @@ fun RightColumn(rowScope: RowScope, npcText: MutableState<String>, monstersText:
                     .fillMaxWidth()
             ) {
                 Text(text = monstersText.value, color = Color.White, modifier = Modifier.padding(8.dp))
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(1.dp, Color.Blue)
+                    .fillMaxWidth()
+            ) {
+                Text(text = statsText.value, color = Color.White, modifier = Modifier.padding(8.dp))
             }
         }
     }

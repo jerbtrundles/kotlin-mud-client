@@ -8,6 +8,7 @@ class WebSocketClient(
     val npcsText: MutableState<String>,
     val monstersText: MutableState<String>,
     val itemsText: MutableState<String>,
+    val statsText: MutableState<String>,
     val debugText: MutableState<String>
 ) {
     private var webSocket: WebSocket? = null
@@ -27,6 +28,7 @@ class WebSocketClient(
                     text.startsWith("NPCS:") -> npcsText.value = text.substringAfter(":")
                     text.startsWith("ROOM:") -> roomText.value = text.substringAfter(":")
                     text.startsWith("ITEMS:") -> itemsText.value = text.substringAfter(":")
+                    text.startsWith("STATS:") -> statsText.value = text.substringAfter(":")
                     text.startsWith("DEBUG:") -> debugText.value = text.substringAfter(":")
                     else -> appendAndTrimOutputText(text)
                 }
